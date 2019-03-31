@@ -1,0 +1,9 @@
+NAME="$(- $0 | beforelast .)"
+LIBS="-L/opt/vc/lib -lbrcmEGL -lbrcmGLESv2 -lbcm_host"
+INCS="-I/opt/vc/include -I/opt/vc/include/interface/vmcs_host/linux"
+INCS+=" -I/opt/vc/include/interface/vcos/pthreads -fPIC"
+LIBS+=" -lfreetype -lpng"
+INCS+=" -I/usr/include/freetype2"
+D- "gcc $LIBS $INCS $NAME.c -o $NAME"
+OUT=$NAME ; o $1 && OUT=$1
+gcc $LIBS $INCS $NAME.c -o $OUT
