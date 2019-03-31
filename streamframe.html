@@ -1,0 +1,90 @@
+<html><head>
+  <title>hostname-0 screen reader</title>
+  <style id="imgzoom" type="text/css">
+/*    img { transform: scale(0.01); } */
+/* transform-origin: 50% 50%; } */
+  </style>
+  <style id="imggrid" type="text/css">
+    #imgbox, #imgpctbox, #imgmagbox { position: absolute; }
+    #imgbox { z-index: 1; top: 0; left: 0; bottom: 0; right: 0; } 
+    #imgpctbox { z-index: 11; float: left; top: 0; left: 0; }
+    #imgmagbox { z-index: 12; float: left; top: 0; right: 0; }
+  </style>
+  <script type="text/javascript">
+    function id(id) { return document.getElementById(id); }
+    function imgzoom() {
+      imgpct = id('imgpct').value;
+      imgmag = id('imgmag').value;
+      imgscale = imgpct * 0.01 * imgmag;
+      imgval = 'img { transform: scale(' + imgscale + '); };';
+//      imgval += ' transform-origin: 50% 50%; }';
+      id('imgpctval').innerHTML = '' + imgpct;
+      id('imgmagval').innerHTML = '' + imgmag;
+      id('imgzoom').innerHTML = "    " + imgval + "\n";
+    }
+    var frameindex = 0;
+ //   var timeoutfunc = null;
+    function imgloadframe() {
+      if (id('running').checked) {
+        frameindex++;
+        var srcurl = document.location.href.substr(7);
+        var srchost = srcurl.substr(0, srcurl.indexOf('/'));
+        var tgturl = 'http://' + srchost + '/io/streamframe?' + (frameindex + Math.random());
+   //     if (timeoutfunc !== null) { clearTimeout(timeoutfunc); }
+  //      timeoutfunc = setTimeout(function() {
+ //         timeoutfunc = null; id('img').style.backgroundColor = '#ff0'; imgloadframe();
+//        }, 6000); // 6 second timeout (to beat 504 Gateway Timeout)
+        try {
+          id('img').src = tgturl;
+        } catch (err) {
+//          imgfailed('img2'); // img1
+          id('img').style.backgroundColor = '#f00'; // does not retry!
+        }
+      }
+//      imgzoom();
+    }
+    function imgloaded() {
+      id('img').style.backgroundColor = '#BBB';
+      imgloadframe();
+    }
+    function imgfailed() {
+      id('img').style.backgroundColor = '#444';
+      imgloadframe();
+    }
+    function imgstopped() {
+      id('img').style.backgroundColor = '#888';
+      imgloadframe();
+    }
+    function imgrequest() {
+      if (id('running').checked) {
+        id('img').style.backgroundColor = '#00f';
+        imgloadframe();
+      }
+    }
+  </script>
+</head><body>
+  <input type="checkbox" id="running" value="ReQueST" onchange="imgrequest();" checked>
+  <div id="imgbox">
+    <img id="img" width="100%" height="100%" src="" onerror="imgfailed();" onabort="imgstopped();" onload="imgloaded();" />
+  </div>
+<!--
+  <div id="imgpctbox">
+    <input id="imgpct" type="range" min="1" max="200" value="100" oninput="imgzoom();" onchange="imgzoom();" />
+    <span id="imgpctval">50</span><b>%</b>
+  </div>
+  <div id="imgmagbox">
+    <input id="imgmag" type="range" min="0.5" max="2" step="0.01" value="0.33" oninput="imgzoom();" onchange="imgzoom();" />
+    <span id="imgmagval">1</span><b>x</b></center>
+  </div>
+-->
+  <script type="text/javascript">
+//    imgzoom();
+    
+    imgloadframe();
+//    function updateimg() {
+//      src = id('img').src.substr(0, id('img').src.indexOf('?'));
+//      id('img').src = src + '?' + new Date().getTime();
+//    }
+//    imgtimer = setInterval(updateimg, 1000);
+  </script>
+</body></html>
